@@ -63,10 +63,10 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param RegisterRequest $request
      * @return User
      */
-    protected function create(Request $request)
+    protected function create(RegisterRequest $request)
     {
         $data = $request->all();
 
@@ -86,5 +86,12 @@ class RegisterController extends Controller
             'avatar' => $avatarImageName,
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    public function register2(RegisterRequest $request)
+    {
+        $user = User::create($request->all());
+        Auth::login($user);
+        return redirect('/home');
     }
 }
