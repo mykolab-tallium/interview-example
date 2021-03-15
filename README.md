@@ -45,7 +45,6 @@ public function store(Request $request)
         $post = new Post();
         $post->title = $request->title;
         $post->body = $request->body;
-        $post->published = $request->published;
         $post->category_id = $request->category_id;
         $post->author_id = auth()->id();
         $post->save();
