@@ -39,7 +39,7 @@ public function store(Request $request)
         ]);
 
         if (auth()->guest() || auth()->user()->hasRole('moderator')) {
-            return redirect('/posts')->with('error', 'Permission denied');
+            abort(403, 'Permission denied');
         }
 
         $post = new Post();
@@ -51,11 +51,14 @@ public function store(Request $request)
 
         if ($request->hasFile('banner')) {
             $banner = $request->file('banner');
+            $bannerName = $post->id . '.' . $banner->extension();
             Image::make($banner)
                 ->resize(600, 400, function ($constraint) {
                     $constraint->aspectRatio();
                 })
-                ->save(storage_path('app/public/posts/banner') . DIRECTORY_SEPARATOR . $post->id . '.' . $banner->extension());
+                ->save(storage_path('app/public/posts/banner') . DIRECTORY_SEPARATOR . $bannerName);
+            $post->banner = $bannerName;
+            $post->save();
         }
 
         return redirect('/posts')->with('message', 'Post successfully created.');
