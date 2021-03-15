@@ -35,7 +35,6 @@ public function store(Request $request)
             'title' => 'required|max:255',
             'body' => 'required',
             'banner' => 'image',
-            'published' => 'required|boolean',
             'category_id' => 'required',
         ]);
 

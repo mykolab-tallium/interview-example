@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
@@ -13,24 +14,28 @@ class PostController extends Controller
         return view('posts.index');
     }
 
+    public function create()
+    {
+        $categories = Category::query()->latest('id')->limit(10)->get();
+        return view('posts.add_edit_form', compact('categories'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|max:255',
             'body' => 'required',
             'banner' => 'image',
-            'published' => 'required|boolean',
             'category_id' => 'required',
         ]);
 
-        if (auth()->guest() || auth()->user()->hasRole('moderator')) {
+        if (auth()->guest() || ! auth()->user()->hasRole('moderator')) {
             return redirect('/posts')->with('error', 'Permission denied');
         }
 
         $post = new Post();
         $post->title = $request->title;
         $post->body = $request->body;
-        $post->published = $request->published;
         $post->category_id = $request->category_id;
         $post->author_id = auth()->id();
         $post->save();

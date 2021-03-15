@@ -18,7 +18,6 @@ class CreatePostsTable extends Migration
             $table->string('title');
             $table->string('banner')->nullable();
             $table->text('body');
-            $table->boolean('published');
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
 
             $table->unsignedBigInteger('author_id');

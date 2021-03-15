@@ -14,7 +14,6 @@ class Post extends Model
         'title',
         'banner',
         'body',
-        'published',
         'category_id',
         'author_id',
     ];
